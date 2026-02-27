@@ -195,36 +195,84 @@ plsfix is designed for instruction documents — text that tells someone (or som
 - **Documents you haven't read.** Don't run plsfix on a document and accept its output without reading both the change report and the rewrite. The `[CONFIRM]` tags exist because the skill sometimes has to guess at your intent — and it will occasionally guess wrong.
 - **Very long documents (5000+ words).** The skill works best when the full document fits comfortably in context. For very long documents, consider breaking them into sections and running plsfix on each section separately.
 
+## Scope: What plsfix Is (and Isn't)
+
+plsfix is a **general-purpose clarity tool**. It applies universal communication principles to any instruction document, regardless of the target platform or file format. It doesn't know or care about the specific conventions of any particular file type — it just makes the writing clearer.
+
+That generality is by design, but it means plsfix doesn't replace specialized tools that understand the *content-level* requirements of specific file formats. There are excellent projects that tune what goes *into* these files:
+
+- **CLAUDE.md** — Tools like [claude-md-builder](https://github.com/anthropics/skills) and guides like [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md) help you decide *what instructions to include* (test commands, coding conventions, repo structure). plsfix then makes those instructions *clearer*.
+- **AGENTS.md** — Codex-specific generators help you structure agent instructions for OpenAI's conventions. plsfix helps ensure each instruction is unambiguous once written.
+- **SOUL.md** — [OpenClaw's SOUL.md system](https://github.com/aaronjmars/soul.md) defines agent persona, values, and communication style with its own structural conventions (Identity, Boundaries, Example Responses). plsfix can sharpen the *writing* within those sections, but it doesn't generate persona content.
+- **README.md** — Tools like [readme-ai](https://github.com/eli64s/readme-ai) generate entire READMEs from your codebase. plsfix is not a README generator — but if your README contains instructional sections (Contributing, Getting Started), plsfix can clarify those.
+
+**The relationship is complementary:** use the specialized tool to decide *what* to say, then use plsfix to say it *clearly*. Or use plsfix standalone when no specialized tool exists for your document type.
+
 ## The 12 Principles
 
-Ordered by application phase: structure the document first, then sharpen content, then refine delivery.
+Ordered by application phase: structure the document first, then sharpen content, then refine delivery. Each principle is grounded in at least two independent sources from the official prompt engineering guidelines of Anthropic, Google, OpenAI, and Microsoft, and backed by academic research.
 
 ### Phase 1: Structure
 
-| # | Principle | Symptom it fixes |
-|---|-----------|------------------|
-| P1 | **Context first, ask last** | Key requirements get missed; output addresses secondary concerns |
-| P2 | **One ask per section** | Output oscillates between competing goals or drops some |
-| P3 | **Break it into steps** | Output jumbles or skips parts of the task |
-| P4 | **Use structural markup** | Reader/AI confuses instructions with examples, or context with the ask |
+Get the bones right before worrying about individual sentences.
+
+**P1: Context first, ask last.** Lead with background and constraints, close with the actual request. Never bury the ask in the middle. LLMs process tokens left to right — an ask that appears before the context was processed without visibility into it. Research confirms models perform measurably better when context precedes the question [[26]](https://arxiv.org/abs/2511.09700), and that information buried in the middle of long prompts suffers significant degradation [[24]](https://arxiv.org/abs/2307.03172). All four providers recommend this structure: Anthropic says "put longform data at the top, above your query" [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices); Google says "place specific questions at the end, after your data context" [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies); Microsoft recommends starting with instructions, then content [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering); OpenAI notes "recency bias" means information at the end has more influence [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering).
+
+*Symptom it fixes:* Key requirements get missed; output addresses secondary concerns instead of the main ask.
+
+**P2: One ask per section.** Split multi-goal paragraphs so each section has exactly one objective. The copywriter's "Rule of One" (one idea, one audience, one call to action) has a direct analog in LLM research: multi-task prompts degrade performance compared to single-task prompts, particularly in smaller models [[23]](https://www.mdpi.com/2079-9292/14/21/4349). Ask for three things at once and the model weights them unevenly, just like a reader who skims a multi-CTA email and does none of them.
+
+*Symptom it fixes:* Output oscillates between competing goals or silently drops some.
+
+**P3: Break it into steps.** Decompose compound instructions into sequential, numbered steps. Copywriters call it the "slippery slope" — each sentence leads to the next, keeping cognitive load manageable. Researchers call it chain-of-thought prompting. Adding "let's think step by step" to math problems improved accuracy from 18% to 79% [[20]](https://arxiv.org/abs/2205.11916). Google recommends "prompt decomposition" — breaking complex tasks into simpler single-instruction prompts [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies). Microsoft calls it "break the task down" [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering). OpenAI's GPT-5 guide recommends decomposing user queries into sub-requests [[7]](https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_prompting_guide).
+
+*Symptom it fixes:* Output jumbles or skips parts of the task.
+
+**P4: Use structural markup.** Separate instructions, context, examples, and inputs with consistent delimiters — XML tags, markdown headers, or `---` separators. All four providers recommend this explicitly. Anthropic says "XML tags help Claude parse complex prompts unambiguously" [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices). Google says "use consistent XML or Markdown delimiters throughout" [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies). Microsoft recommends "clear syntax" with separators and uppercase section headings [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering). OpenAI says "if you're not sure what syntax to use, consider using Markdown or XML" [[5]](https://platform.openai.com/docs/guides/prompt-engineering).
+
+*Symptom it fixes:* Reader/AI confuses instructions with examples, or context with the ask.
 
 ### Phase 2: Content
 
-| # | Principle | Symptom it fixes |
-|---|-----------|------------------|
-| P5 | **Be specific, not abstract** | Output is generic or surface-level |
-| P6 | **Name your audience** | Tone, depth, or vocabulary is wrong for the reader |
-| P7 | **Define the output contract** | Output is correct in substance but wrong in shape, length, or structure |
-| P8 | **Show, don't tell** | Reader/AI guesses wrong about what "good" looks like |
+Sharpen what you're saying.
+
+**P5: Be specific, not abstract.** Replace vague nouns with concrete details: audience, format, scope, quantities. "Save $47 on your first order" beats "save money" in copywriting. The same holds for LLMs: a study testing 26 prompting principles found an average 57.7% quality improvement on GPT-4 when applying specificity and other principles [[18]](https://arxiv.org/abs/2312.16171). Anthropic's golden rule: "Show your prompt to a colleague with minimal context on the task and ask them to follow it. If they'd be confused, Claude will be too" [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices). Microsoft says "be specific — leave as little to interpretation as possible" [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering). OpenAI warns "models can guess what you mean, but guesses aren't reliable, especially in production" [[5]](https://platform.openai.com/docs/guides/prompt-engineering).
+
+*Symptom it fixes:* Output is generic or surface-level.
+
+**P6: Name your audience.** State who will read or act on the output and what they already know. "Written for CFOs at Series B startups" produces entirely different output than "written for general audiences." The model shifts toward token distributions that co-occurred with that audience type in training data — different mechanism than human audience adaptation, same result. Google's prompt structure explicitly includes a "Role" component [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies). Anthropic recommends "give Claude a role" to focus behavior and tone [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices).
+
+*Symptom it fixes:* Tone, depth, or vocabulary is wrong for the reader.
+
+**P7: Define the output contract.** Specify what "done" looks like: format, length, structure, required fields. Microsoft identifies this as the #1 prompt failure: "most failures stem from undefined 'done'" [[9]](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering). Their system message design checklist starts with "specify the output format." OpenAI recommends specifying output structure because "it can have a significant effect on the nature and quality of the results" [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering). Google says "define response format expectations (tables, lists, JSON, etc.)" [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies). Anthropic recommends telling Claude the desired output format and constraints explicitly [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices).
+
+*Symptom it fixes:* Output is correct in substance but wrong in shape, length, or structure.
+
+**P8: Show, don't tell.** Add 1-3 examples of desired output. Copywriters use case studies because concrete examples beat abstract claims. Few-shot prompting is the single most studied technique in all of prompt engineering, dating to GPT-3's foundational paper [[19]](https://arxiv.org/abs/2005.14165). Quality of examples matters more than quantity — one well-chosen example beats ten mediocre ones. Anthropic recommends 3-5 examples wrapped in `<example>` tags [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices). Google's whitepaper says "prompts without few-shot examples are likely to be less effective" and explicitly discourages zero-shot [[3]](https://ai.google.dev/gemini-api/docs/prompting-strategies). Microsoft and OpenAI both recommend few-shot learning with input/output pairs [[5]](https://platform.openai.com/docs/guides/prompt-engineering) [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering).
+
+*Symptom it fixes:* Reader/AI guesses wrong about what "good" looks like.
 
 ### Phase 3: Delivery
 
-| # | Principle | Symptom it fixes |
-|---|-----------|------------------|
-| P9 | **Say what to do, not what to avoid** | Forbidden behavior still appears; instructions feel restrictive |
-| P10 | **Make the stakes real** | Instructions followed mechanically without judgment or care |
-| P11 | **Give an out for uncertainty** | Fabricated answers, confident guesses, or silent failures |
-| P12 | **Resolve contradictions** | Reader/AI wastes effort resolving ambiguity or picks the wrong side |
+Refine how you're saying it.
+
+**P9: Say what to do, not what to avoid.** Rewrite "don't" and "avoid" instructions as positive directives. Copywriters learned long ago that "don't think about a pink elephant" makes you think about a pink elephant. LLMs have the same problem: negative instructions activate the very concept you're trying to suppress. Anthropic has formalized this into their official documentation, recommending "tell Claude what to do instead of what not to do" [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices). Instead of "do not use markdown," try "your response should be composed of smoothly flowing prose paragraphs."
+
+*Symptom it fixes:* Forbidden behavior still appears; instructions feel restrictive rather than enabling.
+
+**P10: Make the stakes real.** State why this matters: who benefits, what breaks if done wrong, what success enables. Every copywriter knows emotion drives action more than logic. A Microsoft and Chinese Academy of Sciences team tested this directly on LLMs: positive emotional framing ("this is very important to my career") improved performance by up to 115% on BIG-Bench reasoning benchmarks [[21]](https://arxiv.org/abs/2307.11760). Negative emotional framing ("this seems beyond your skill level") boosted performance by 46% [[22]](https://arxiv.org/abs/2405.02814). The models don't feel urgency, but emotionally-framed requests in their training data were paired with higher-effort human responses. Anthropic recommends "providing context or motivation behind your instructions" because "Claude is smart enough to generalize from the explanation" [[1]](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices).
+
+*Symptom it fixes:* Instructions followed mechanically without judgment or care.
+
+**P11: Give an out for uncertainty.** Explicitly state what to do when information is missing, the request is ambiguous, or the task is out of scope. Without this, models fabricate answers or fail silently. Anthropic recommends giving "explicit permission to express uncertainty rather than guessing" to reduce hallucinations [[2]](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview). Microsoft's system message design checklist includes "add a 'when unsure' policy" — define behavior when the request is ambiguous, out of scope, or the model lacks information [[9]](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering). Microsoft also recommends giving the model an "out" (e.g., "respond with 'not found' if the answer isn't present") [[8]](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/prompt-engineering).
+
+*Symptom it fixes:* Fabricated answers, confident guesses, or silent failures when the task can't be completed as written.
+
+**P12: Resolve contradictions.** Ensure no two instructions conflict; when tensions exist, state which takes priority. OpenAI's GPT-5 guide warns that "GPT-5 expends reasoning tokens resolving contradictions rather than ignoring them" and recommends reviewing prompts for conflicting directives before deployment [[7]](https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_prompting_guide). Microsoft lists "conflicting instructions" as a top pitfall (e.g., "be brief" and "be comprehensive" without prioritization) and warns that "a system message influences the model, but it doesn't guarantee compliance" — contradictions make non-compliance more likely [[9]](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering).
+
+*Symptom it fixes:* Reader/AI wastes effort resolving ambiguity, or silently picks the wrong side of a conflict.
+
+---
 
 See [SKILL.md](SKILL.md) for the full workflow, rewriting rules, diagnosis patterns, and change report format.
 
