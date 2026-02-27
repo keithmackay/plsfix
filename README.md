@@ -1,8 +1,24 @@
 # plsfix
 
-Turn vague instructions into clear ones. A [Claude Code skill](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills) that diagnoses and rewrites spec documents, prompts, requirements docs, briefs, and any written instructions meant to drive action from humans or AI.
+Turn vague instructions into clear ones. An agent skill that diagnoses and rewrites spec documents, prompts, requirements docs, briefs, and any written instructions meant to drive action from humans or AI.
 
 Give it a document. It identifies what's unclear and why, rewrites it, and hands back both the improved version and a change report mapping every edit to the principle it implements.
+
+Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills), [OpenAI Codex](https://developers.openai.com/codex/skills/), and [Google Antigravity](https://antigravity.google/docs/skills) — all three use the same `SKILL.md` format. Can also be used as raw principles for direct prompting with any LLM.
+
+## Table of Contents
+
+- [Highlights](#highlights)
+- [Installation](#installation)
+- [Usage](#usage)
+- [What to Use It On](#what-to-use-it-on)
+- [Using the Principles Without the Skill](#using-the-principles-without-the-skill)
+- [When to Expect the Best Results](#when-to-expect-the-best-results)
+- [When NOT to Use plsfix](#when-not-to-use-plsfix)
+- [The 12 Principles](#the-12-principles)
+- [Contributing](#contributing)
+- [References](#references)
+- [License](#license)
 
 ## Highlights
 
@@ -11,35 +27,46 @@ Give it a document. It identifies what's unclear and why, rewrites it, and hands
 - **Change report with every rewrite** — every edit cites the principle it implements and why, so the author learns while reviewing
 - **Voice preservation** — rewrites sharpen clarity without stripping the author's tone or inventing new requirements
 - **Safe assumptions** — anything the skill infers is marked `[CONFIRM]` so the author can verify or override
+- **Cross-platform** — same `SKILL.md` file works in Claude Code, OpenAI Codex, and Google Antigravity
 
-## Getting Started
+## Installation
 
-### Prerequisites
+The `SKILL.md` format is a shared standard across Claude Code, OpenAI Codex, and Google Antigravity. The file is identical — only the installation path differs.
 
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview) installed and authenticated
-
-### Installation
-
-Copy `SKILL.md` into your Claude Code skills directory:
+### Claude Code
 
 ```bash
 mkdir -p ~/.claude/skills/plsfix
 cp SKILL.md ~/.claude/skills/plsfix/SKILL.md
 ```
 
-Or clone and copy:
+Verify by running Claude Code and typing `/plsfix`. See [Claude Code skills docs](https://code.claude.com/docs/en/skills) for details.
+
+### OpenAI Codex
 
 ```bash
-git clone <repo-url> && cp plsfix/SKILL.md ~/.claude/skills/plsfix/SKILL.md
+mkdir -p .agents/skills/plsfix
+cp SKILL.md .agents/skills/plsfix/SKILL.md
 ```
 
-### Verify
+Codex scans `.agents/skills/` in your repo, then `$HOME/.agents/skills/` for user-global skills. Invoke with `/skills` or the `$plsfix` mention syntax. See [Codex skills docs](https://developers.openai.com/codex/skills/) for details.
 
-Run Claude Code and type `/plsfix`. If the skill loads, you're set.
+### Google Antigravity
+
+```bash
+mkdir -p .antigravity/skills/plsfix
+cp SKILL.md .antigravity/skills/plsfix/SKILL.md
+```
+
+Antigravity uses semantic triggering — the agent reads the skill's `description` field and activates it automatically when your request matches, or you can invoke it explicitly. See [Antigravity skills docs](https://antigravity.google/docs/skills) for details.
+
+### Any other LLM or agent
+
+If your tool doesn't support the `SKILL.md` format natively, paste the contents of `SKILL.md` into your system prompt or prepend it to your message. The principles and workflow are plain markdown — any LLM can follow them.
 
 ## Usage
 
-Invoke the skill by typing `/plsfix` in Claude Code, then paste or point it at the document you want improved.
+Invoke the skill, then paste or point it at the document you want improved.
 
 ### Before
 
@@ -69,6 +96,104 @@ in a 3-column grid.
 | 2 | P6: Name your audience | "good for executives" | "VP-level executives who review operational health weekly" | Specifying the audience calibrates vocabulary and depth |
 | 3 | P9: Say what to do | "Don't use too many colors" / "Avoid technical jargon" | "dark theme" / "Use plain language a non-technical stakeholder would understand" | Negative instructions replaced with positive directives |
 | 4 | P7: Define output contract | (missing) | "single-page view, one chart per metric, 3-column grid" | No format specification existed; output shape was undefined |
+
+## What to Use It On
+
+plsfix works on any written instructions meant to drive action. The sweet spot is documents where vague or disorganized writing leads to misinterpretation — by humans or by AI.
+
+### System instruction files
+
+These are the highest-leverage targets. A poorly written system instruction file silently degrades every interaction the agent has. plsfix is particularly effective on:
+
+- **CLAUDE.md / AGENTS.md** — Project-level instructions that shape how coding agents behave across your entire repo. Research shows that as instruction count increases, instruction-following quality decreases uniformly [[ref]](https://www.humanlayer.dev/blog/writing-a-good-claude-md). Every instruction that's vague, contradictory, or buried in the middle costs you compliance on the instructions around it.
+- **SKILL.md files** — Other skills you've written. Skills are ephemeral instructions loaded on-demand; they need to be especially clear because the agent has no prior context when it loads them.
+- **Custom agents and commands** — Agent definition files, slash command definitions, and any markdown that gets injected into an agent's context window.
+- **MEMORY.md and knowledge base files** — Persistent context that agents reference across sessions. Vague memories produce vague behavior.
+
+### Spec and requirements documents
+
+- Product requirements docs (PRDs)
+- Technical specs and architecture decision records
+- User stories and acceptance criteria
+- API contracts and interface definitions
+- Test plans
+
+### Prompts used directly with LLMs
+
+- System prompts for chatbots, assistants, and agent loops
+- Reusable prompt templates
+- Few-shot example sets (plsfix can evaluate whether examples are clear, diverse, and well-structured)
+
+### Operational documents
+
+- Runbooks and playbooks
+- Onboarding guides
+- Process documentation
+- Internal briefs and SOPs
+
+## Using the Principles Without the Skill
+
+You don't need the skill infrastructure to benefit from the 12 principles. They work as a mental checklist or as raw instructions pasted into any LLM conversation.
+
+### As a one-shot prompt
+
+Paste the principles table from `SKILL.md` into a conversation along with the document you want improved:
+
+```text
+Here are 12 principles for effective instructions. Review the document
+below against each principle. For every violation, rewrite the relevant
+section and explain which principle it fixes and why.
+
+[paste principles table]
+
+---
+
+[paste your document]
+```
+
+### As a mental checklist
+
+Before sending any important prompt or spec document, scan it against the quick reference:
+
+1. Did I put context before the ask?
+2. Does each section have one goal?
+3. Are compound instructions broken into steps?
+4. Are different content types (instructions, context, examples) visually separated?
+5. Did I replace vague nouns with concrete details?
+6. Did I say who the audience is?
+7. Did I define what "done" looks like?
+8. Did I include an example?
+9. Did I frame instructions positively (what to do, not what to avoid)?
+10. Did I explain why this matters?
+11. Did I say what to do when uncertain?
+12. Do any of my instructions contradict each other?
+
+### In a custom GPT, assistant, or agent
+
+Add the principles to your system prompt as standing instructions. The agent will apply them when asked to review or improve documents, or you can reference them when writing prompts yourself.
+
+## When to Expect the Best Results
+
+plsfix produces the most dramatic improvements when:
+
+- **The document is medium-length (200-2000 words).** Short enough for the agent to hold the full document in context, long enough to have structural problems worth fixing.
+- **The document has clear intent but poor execution.** The author knows what they want but hasn't articulated it well. plsfix clarifies; it doesn't invent.
+- **The document will be consumed by an LLM.** System prompts, skills, agent instructions, and prompt templates benefit the most because LLMs are more sensitive to the exact issues the 12 principles address (buried asks, contradictions, missing output contracts) than human readers are.
+- **The document is being used repeatedly.** A prompt template used 100 times gets 100x the value from a clarity improvement. A one-off message gets 1x.
+- **Multiple people are interpreting the same document.** Ambiguity costs compound with each additional reader. plsfix reduces the surface area for misinterpretation.
+
+Results are solid but less dramatic when the document is already well-written and mostly needs minor tightening — plsfix will correctly report that few principles were triggered.
+
+## When NOT to Use plsfix
+
+plsfix is designed for instruction documents — text that tells someone (or something) what to do. It is the wrong tool for:
+
+- **Creative writing.** Fiction, poetry, essays, marketing copy. These have different goals (voice, persuasion, narrative arc) that the 12 principles don't address and may actively harm. A novel shouldn't have an "output contract."
+- **Conversational messages.** Slack messages, emails, chat replies. These are too short and too context-dependent. The overhead of a change report isn't worth it for a three-sentence message.
+- **Code.** plsfix works on natural language instructions, not source code. Use a linter.
+- **Documents where ambiguity is intentional.** Some strategic documents are deliberately vague to allow flexibility in interpretation. If the author left something open-ended on purpose, plsfix will flag it as a problem. That's a false positive.
+- **Documents you haven't read.** Don't run plsfix on a document and accept its output without reading both the change report and the rewrite. The `[CONFIRM]` tags exist because the skill sometimes has to guess at your intent — and it will occasionally guess wrong.
+- **Very long documents (5000+ words).** The skill works best when the full document fits comfortably in context. For very long documents, consider breaking them into sections and running plsfix on each section separately.
 
 ## The 12 Principles
 
@@ -102,6 +227,31 @@ Ordered by application phase: structure the document first, then sharpen content
 | P12 | **Resolve contradictions** | Reader/AI wastes effort resolving ambiguity or picks the wrong side |
 
 See [SKILL.md](SKILL.md) for the full workflow, rewriting rules, diagnosis patterns, and change report format.
+
+## Contributing
+
+Contributions are welcome. The principles in this skill are grounded in published research, so proposed changes should be backed by evidence — either from the official prompt engineering docs of a major LLM provider or from a peer-reviewed paper.
+
+### How to contribute
+
+1. Fork this repo
+2. Create a feature branch (`git checkout -b improve-principle-x`)
+3. Make your changes to `SKILL.md` and/or `README.md`
+4. If adding or modifying a principle, include a link to the supporting source (official docs or paper)
+5. Submit a pull request with a clear description of what changed and why
+
+### What makes a good PR
+
+- **Adding a principle:** Must be supported by at least two independent sources (e.g., two different LLM providers' official docs, or one provider doc + one peer-reviewed paper). A single blog post is not sufficient. The principle should address a failure mode not already covered by the existing 12.
+- **Modifying a principle:** Explain what's wrong with the current wording and provide evidence for the improvement. Research such as [Principled Instructions Are All You Need](https://arxiv.org/abs/2312.16171) [18] tested 26 prompting principles empirically — if your change conflicts with tested findings, explain why.
+- **Reordering principles:** The current order (Structure → Content → Delivery) is based on the consensus across all four providers that structural fixes should precede content fixes. Changes to ordering should cite evidence for the alternative sequence.
+- **Fixing bugs or typos:** Just submit the PR. No research citation needed.
+- **Adding references:** Always welcome. If you find a paper that provides additional evidence for an existing principle, add it to the References section.
+
+### What doesn't belong
+
+- Principles that are model-specific or version-specific (e.g., "use `reasoning_effort: medium` for GPT-5"). plsfix targets the fundamentals that work across all LLMs.
+- Prompt tricks or hacks that don't have a corresponding human communication principle. The core insight of plsfix is that effective human writing and effective AI prompting converge — contributions should reinforce that thesis.
 
 ---
 
