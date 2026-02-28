@@ -348,4 +348,4 @@ These papers provide the empirical evidence that the same communication principl
 
 ## License
 
-This project is not yet licensed. Consider adding a `LICENSE` file to clarify usage terms.
+[MIT](LICENSE)
