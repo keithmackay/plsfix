@@ -6,6 +6,8 @@ Give it a document. It identifies what's unclear and why, rewrites it, and hands
 
 Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills), [OpenAI Codex](https://developers.openai.com/codex/skills/), and [Google Antigravity](https://antigravity.google/docs/skills) — all three use the same `SKILL.md` format. Can also be used as raw principles for direct prompting with any LLM.
 
+> **NOTE:** Don't run plsfix on a document and accept its output without reading both the change report and the rewrite. The `[CONFIRM]` tags exist because the skill sometimes has to guess at your intent — and it will occasionally guess wrong.
+
 ## Table of Contents
 
 - [Highlights](#highlights)
