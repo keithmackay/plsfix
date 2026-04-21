@@ -1,0 +1,63 @@
+name: Bug Report
+description: Report incorrect or unexpected behavior from plsfix
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. The more detail you provide, the easier it is to reproduce and fix.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe what plsfix did that was wrong or unexpected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: input
+    attributes:
+      label: Input document (or representative excerpt)
+      description: Paste the document you ran plsfix on, or a short excerpt that reproduces the issue.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect plsfix to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What did it actually do? Paste the change report or rewritten output if relevant.
+      render: text
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which agent platform were you using?
+      options:
+        - Claude Code
+        - OpenAI Codex
+        - Google Antigravity
+        - Gemini CLI
+        - Direct prompting (no skill infrastructure)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that might be relevant — document type, approximate length, which principle(s) seem affected.

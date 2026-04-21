@@ -326,28 +326,9 @@ Legend: ✅ Supported · ❌ Not supported
 
 ## Contributing
 
-Contributions are welcome. The principles in this skill are grounded in published research, so proposed changes should be backed by evidence — either from the official prompt engineering docs of a major LLM provider or from a peer-reviewed paper.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide, including how to report bugs, propose new principles, and set up local development.
 
-### How to contribute
-
-1. Fork this repo
-2. Create a feature branch (`git checkout -b improve-principle-x`)
-3. Make your changes to `SKILL.md` and/or `README.md`
-4. If adding or modifying a principle, include a link to the supporting source (official docs or paper)
-5. Submit a pull request with a clear description of what changed and why
-
-### What makes a good PR
-
-- **Adding a principle:** Must be supported by at least two independent sources (e.g., two different LLM providers' official docs, or one provider doc + one peer-reviewed paper). A single blog post is not sufficient. The principle should address a failure mode not already covered by the existing 12.
-- **Modifying a principle:** Explain what's wrong with the current wording and provide evidence for the improvement. Research such as [Principled Instructions Are All You Need](https://arxiv.org/abs/2312.16171) [18] tested 26 prompting principles empirically — if your change conflicts with tested findings, explain why.
-- **Reordering principles:** The current order (Structure → Content → Delivery) is based on the consensus across all four providers that structural fixes should precede content fixes. Changes to ordering should cite evidence for the alternative sequence.
-- **Fixing bugs or typos:** Just submit the PR. No research citation needed.
-- **Adding references:** Always welcome. If you find a paper that provides additional evidence for an existing principle, add it to the References section.
-
-### What doesn't belong
-
-- Principles that are model-specific or version-specific (e.g., "use `reasoning_effort: medium` for GPT-5"). plsfix targets the fundamentals that work across all LLMs.
-- Prompt tricks or hacks that don't have a corresponding human communication principle. The core insight of plsfix is that effective human writing and effective AI prompting converge — contributions should reinforce that thesis.
+The short version: proposed principle changes must be backed by at least two independent sources (two different LLM provider docs, or one provider doc + one peer-reviewed paper). Fork the repo, make your changes, and open a pull request with a description of what changed and why.
 
 ---
 

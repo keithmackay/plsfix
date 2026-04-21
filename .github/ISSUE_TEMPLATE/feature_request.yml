@@ -1,0 +1,43 @@
+name: Feature Request
+description: Suggest a new principle, workflow improvement, or other enhancement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests for new principles must be backed by at least two independent sources
+        (two different LLM provider docs, or one provider doc + one peer-reviewed paper).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the failure mode or gap this would address. What goes wrong without it?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see added or changed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Supporting sources
+      description: |
+        For new principles: list at least two independent sources (provider docs or peer-reviewed papers).
+        For other changes: any evidence or rationale supporting the proposal.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you considered, and why you prefer this one.
+    validations:
+      required: false
