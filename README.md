@@ -4,7 +4,7 @@ Turn vague instructions into clear ones. An agent skill that diagnoses and rewri
 
 Give it a document. It identifies what's unclear and why, rewrites it, and hands back both the improved version and a change report mapping every edit to the principle it implements.
 
-Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills), [OpenAI Codex](https://developers.openai.com/codex/skills/), and [Google Antigravity](https://antigravity.google/docs/skills) — all three use the same `SKILL.md` format. Can also be used as raw principles for direct prompting with any LLM.
+Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills), [OpenAI Codex](https://developers.openai.com/codex/plugins/build), [Google Antigravity](https://antigravity.google/docs/skills), and [Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md) — all four use the same `SKILL.md` format. Can also be used as raw principles for direct prompting with any LLM.
 
 > **NOTE:** Don't run plsfix on a document and accept its output without reading both the change report and the rewrite. The `[CONFIRM]` tags exist because the skill sometimes has to guess at your intent — and it will occasionally guess wrong.
 
@@ -17,7 +17,9 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 - [Using the Principles Without the Skill](#using-the-principles-without-the-skill)
 - [When to Expect the Best Results](#when-to-expect-the-best-results)
 - [When NOT to Use plsfix](#when-not-to-use-plsfix)
+- [Scope: What plsfix Is (and Isn't)](#scope-what-plsfix-is-and-isnt)
 - [The 12 Principles](#the-12-principles)
+- [Compatibility](#compatibility)
 - [Contributing](#contributing)
 - [References](#references)
 - [License](#license)
@@ -29,7 +31,7 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 - **Change report with every rewrite** — every edit cites the principle it implements and why, so the author learns while reviewing
 - **Voice preservation** — rewrites sharpen clarity without stripping the author's tone or inventing new requirements
 - **Safe assumptions** — anything the skill infers is marked `[CONFIRM]` so the author can verify or override
-- **Cross-platform** — same `SKILL.md` file works in Claude Code, OpenAI Codex, and Google Antigravity
+- **Cross-platform** — same `SKILL.md` file works in Claude Code, OpenAI Codex, Google Antigravity, and Gemini CLI
 
 ## Installation
 
@@ -402,4 +404,4 @@ These papers provide the empirical evidence that the same communication principl
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © 2025 Keith MacKay
