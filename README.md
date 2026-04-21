@@ -33,34 +33,69 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 
 ## Installation
 
-The `SKILL.md` format is a shared standard across Claude Code, OpenAI Codex, and Google Antigravity. The file is identical — only the installation path differs.
-
 ### Claude Code
 
 ```bash
-mkdir -p ~/.claude/skills/plsfix
-cp SKILL.md ~/.claude/skills/plsfix/SKILL.md
+cp -r /path/to/plsfix/ ~/.claude/skills/plsfix/
 ```
 
-Verify by running Claude Code and typing `/plsfix`. See [Claude Code skills docs](https://code.claude.com/docs/en/skills) for details.
+Or symlink:
+```bash
+ln -s /path/to/plsfix/ ~/.claude/skills/plsfix
+```
 
-### OpenAI Codex
+Then invoke with: `/plsfix`. See [Claude Code skills docs](https://code.claude.com/docs/en/skills) for details.
+
+### Codex
+
+Place the plugin directory where Codex can find it, then add an entry to your marketplace:
+
+**`~/.agents/plugins/marketplace.json`** (create if absent):
+```json
+{
+  "name": "personal",
+  "interface": { "displayName": "Personal Plugins" },
+  "plugins": [
+    {
+      "name": "plsfix",
+      "source": { "source": "local", "path": "/path/to/plsfix/" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}
+```
+
+See [Codex plugins docs](https://developers.openai.com/codex/plugins/build) for details.
+
+### Antigravity
+
+**Global install** (all workspaces):
+```bash
+cp -r /path/to/plsfix/ ~/.gemini/antigravity/skills/plsfix/
+```
+
+**Workspace install** (current project only):
+```bash
+cp -r /path/to/plsfix/ .agents/skills/plsfix/
+```
+
+The root `SKILL.md` is Antigravity-compatible as-is (no platform-specific metadata to strip). Skills are auto-discovered via semantic triggering on the `description` field, or invoke explicitly by name. See [Antigravity skills docs](https://antigravity.google/docs/skills) for details.
+
+### Gemini CLI
+
+Gemini CLI installs extensions directly from GitHub:
 
 ```bash
-mkdir -p .agents/skills/plsfix
-cp SKILL.md .agents/skills/plsfix/SKILL.md
+gemini extensions install https://github.com/keithmackay/plsfix
 ```
 
-Codex scans `.agents/skills/` in your repo, then `$HOME/.agents/skills/` for user-global skills. Invoke with `/skills` or the `$plsfix` mention syntax. See [Codex skills docs](https://developers.openai.com/codex/skills/) for details.
-
-### Google Antigravity
-
+To update:
 ```bash
-mkdir -p .antigravity/skills/plsfix
-cp SKILL.md .antigravity/skills/plsfix/SKILL.md
+gemini extensions update plsfix
 ```
 
-Antigravity uses semantic triggering — the agent reads the skill's `description` field and activates it automatically when your request matches, or you can invoke it explicitly. See [Antigravity skills docs](https://antigravity.google/docs/skills) for details.
+The skill is auto-discovered from `GEMINI.md` after installation. See [Gemini CLI extension docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md) for details.
 
 ### Any other LLM or agent
 
@@ -278,6 +313,15 @@ Refine how you're saying it.
 
 See [SKILL.md](SKILL.md) for the full workflow, rewriting rules, diagnosis patterns, and change report format.
 
+## Compatibility
+
+| Feature | Claude Code | Codex | Antigravity | Gemini CLI |
+|---------|:-----------:|:-----:|:-----------:|:----------:|
+| Core skill | ✅ | ✅ | ✅ | ✅ |
+| Sub-documents (`operations/`) | ✅ | ✅ | ✅ | ✅ |
+
+Legend: ✅ Supported · ❌ Not supported
+
 ## Contributing
 
 Contributions are welcome. The principles in this skill are grounded in published research, so proposed changes should be backed by evidence — either from the official prompt engineering docs of a major LLM provider or from a peer-reviewed paper.
@@ -306,6 +350,14 @@ Contributions are welcome. The principles in this skill are grounded in publishe
 ---
 
 ## References
+
+### Platform Documentation
+
+- **Claude Code Skills:** https://code.claude.com/docs/en/skills
+- **Codex Plugins:** https://developers.openai.com/codex/plugins/build
+- **Antigravity Skills:** https://antigravity.google/docs/skills
+- **Gemini CLI Extensions:** https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md
+- **Agent Skills open standard:** https://agentskills.io/home
 
 ### Industry Prompt Engineering Guidelines
 

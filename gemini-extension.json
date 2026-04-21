@@ -1,0 +1,6 @@
+{
+  "name": "plsfix",
+  "description": "Use when improving spec documents, instruction sets, prompts, requirements docs, briefs, or any written instructions meant to drive action from humans or AI - rewrites vague, disorganized, or ineffective instructions into clear, actionable ones",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md"
+}
