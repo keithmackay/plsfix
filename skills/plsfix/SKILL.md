@@ -27,26 +27,36 @@ Improve spec and instruction documents by applying the 12 principles that make b
 
 If the user invokes this skill with a `--help` flag (e.g. `/plsfix --help`), do not run the workflow. Instead, read and display the contents of `help.md` (in this skill's folder) verbatim, then stop.
 
-### `--version`
-
-If the user invokes this skill with a `--version` flag (e.g. `/plsfix --version`), do not run the workflow. Instead:
-
-1. Read the installed version from this skill's own manifest: `.claude-plugin/plugin.json` if present, else `.codex-plugin/plugin.json`, else `gemini-extension.json` — whichever exists for this platform install. If none exist (a bare Claude Code skill with only SKILL.md), read the topmost version heading in `CHANGELOG.md` instead.
-2. Print: `plsfix v<installed-version>`
-3. Best-effort update check — determine this skill's GitHub source repo:
-   a. If `.git` exists here and `git remote get-url origin` resolves to a `github.com` URL, use that `owner/repo`.
-   b. Otherwise, search this skill's own `README.md` for the first `https://github.com/<owner>/<repo>` URL and use that.
-   c. If neither yields a repo, or the `gh` CLI isn't installed/authenticated: stop here. Print nothing further — no status line, no error.
-4. If a repo was found: run `gh api repos/<owner>/<repo>/releases/latest -q .tag_name` (strip a leading `v`). Compare to the installed version:
-   - Equal → append: `Status: up to date`
-   - Installed is older → append: `Status: newer version available (v<latest>). To update: if you installed this via a Claude Code marketplace, run /plugin marketplace update <marketplace-name> then reinstall; otherwise, git pull in your install directory if it's a git checkout, or re-copy from https://github.com/<owner>/<repo> per this README's Installation section.`
-   - Installed is newer → append: `Status: ahead of latest release (development checkout)`
-   - If the API call fails for any reason (network, auth, rate limit, malformed tag): print nothing further — no status line, no error shown to the user.
-5. Stop — do not proceed to run the skill's actual workflow.
-
 ## The 12 Principles
 
-Principles are ordered by application sequence: structure the document first (P1-P4), then sharpen content (P5-P8), then refine delivery (P9-P12). Read `references/principles.md` (in this skill's folder) for the full table of each principle, its one-liner, and the symptom/diagnostic that indicates it applies — consult it during Step 1 below.
+Principles are ordered by application sequence: structure the document first, then sharpen content, then refine delivery.
+
+### Phase 1: Structure (get the bones right)
+
+| # | Principle | One-liner | Symptom it fixes |
+|---|-----------|-----------|------------------|
+| P1 | **Context first, ask last** | Lead with background and constraints, close with the actual request; never bury the ask in the middle | Key requirements get missed; output addresses secondary concerns |
+| P2 | **One ask per section** | Split multi-goal paragraphs so each section has exactly one objective | Output oscillates between competing goals or drops some |
+| P3 | **Break it into steps** | Decompose compound instructions into sequential, numbered steps | Output jumbles or skips parts of the task |
+| P4 | **Use structural markup** | Separate instructions, context, examples, and inputs with consistent delimiters (XML tags, markdown headers, or `---` separators) | Reader/AI confuses instructions with examples, or context with the ask |
+
+### Phase 2: Content (sharpen what you're saying)
+
+| # | Principle | One-liner | Symptom it fixes |
+|---|-----------|-----------|------------------|
+| P5 | **Be specific, not abstract** | Replace vague nouns with concrete details: audience, format, scope, quantities | Output is generic or surface-level |
+| P6 | **Name your audience** | State who will read/act on the output and what they already know | Tone, depth, or vocabulary is wrong for the reader |
+| P7 | **Define the output contract** | Specify what "done" looks like: format, length, structure, required fields | Output is correct in substance but wrong in shape, length, or structure |
+| P8 | **Show, don't tell** | Add 1-3 examples of desired output | Reader/AI guesses wrong about what "good" looks like |
+
+### Phase 3: Delivery (refine how you're saying it)
+
+| # | Principle | One-liner | Symptom it fixes |
+|---|-----------|-----------|------------------|
+| P9 | **Say what to do, not what to avoid** | Rewrite "don't" and "avoid" instructions as positive directives | Forbidden behavior still appears; instructions feel restrictive rather than enabling |
+| P10 | **Make the stakes real** | State why this matters: who benefits, what breaks if done wrong, what success enables | Instructions followed mechanically without judgment or care |
+| P11 | **Give an out for uncertainty** | Explicitly state what to do when information is missing, the request is ambiguous, or the task is out of scope | Fabricated answers, confident guesses, or silent failures when the task can't be completed as written |
+| P12 | **Resolve contradictions** | Ensure no two instructions conflict; when tensions exist, state which takes priority | Reader/AI wastes effort resolving ambiguity, or silently picks the wrong side of a conflict |
 
 ## Workflow
 
@@ -106,6 +116,23 @@ Show the user:
 2. The rewritten document (full text, ready to use)
 
 Ask: *"Any of the [CONFIRM] items to adjust, or changes you'd like to revert?"*
+
+## Quick Reference: Diagnosis Patterns
+
+| You see this... | Apply this principle |
+|-----------------|---------------------|
+| Core requirement buried in paragraph 4 of 6 | P1: Context first, ask last |
+| Section tries to accomplish multiple goals | P2: One ask per section |
+| Run-on paragraph with 3+ distinct instructions | P3: Break into steps |
+| Instructions, examples, and context mixed together with no separators | P4: Use structural markup |
+| "Build a good X", "make it effective", "ensure quality" | P5: Be specific |
+| No mention of who the output is for | P6: Name your audience |
+| No specification of output format, length, or structure | P7: Define the output contract |
+| No examples of desired output anywhere in doc | P8: Show don't tell |
+| Multiple "don't", "avoid", "never" instructions | P9: Say what to do |
+| No explanation of why the task matters | P10: Make stakes real |
+| No guidance on what to do when uncertain or out of scope | P11: Give an out for uncertainty |
+| Two instructions that contradict each other (e.g., "be brief" and "be comprehensive") | P12: Resolve contradictions |
 
 ## Common Mistakes
 

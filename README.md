@@ -35,13 +35,6 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 
 ## Installation
 
-### From the mackayi marketplace (recommended)
-
-```
-/plugin marketplace add keithmackay/mackayi
-/plugin install plsfix@mackayi
-```
-
 ### Claude Code
 
 ```bash
@@ -389,10 +382,6 @@ These papers provide the empirical evidence that the same communication principl
 ### Related Reading
 
 - [The Most Important AI Skill Isn't Technical. It's the One You Learned in English Class.](https://tlcmentor.substack.com/p/communication-skills-are-ai-skills) — The article that motivated this skill, exploring why clear writing is the highest-leverage AI skill.
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
 
