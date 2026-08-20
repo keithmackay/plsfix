@@ -21,6 +21,12 @@ Improve spec and instruction documents by applying the 12 principles that make b
 - Document has grown organically and lost coherence
 - User says "fix this", "improve this", "make this clearer" about an instruction document
 
+## Flags
+
+### `--help`
+
+If the user invokes this skill with a `--help` flag (e.g. `/plsfix --help`), do not run the workflow. Instead, read and display the contents of `help.md` (in this skill's folder) verbatim, then stop.
+
 ## The 12 Principles
 
 Principles are ordered by application sequence: structure the document first, then sharpen content, then refine delivery.
