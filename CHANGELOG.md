@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+- Add Changelog section to README linking CHANGELOG.md
 ### Added
 
 - Gemini CLI support via `gemini-extension.json` and `GEMINI.md`
