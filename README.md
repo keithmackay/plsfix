@@ -383,6 +383,10 @@ These papers provide the empirical evidence that the same communication principl
 
 - [The Most Important AI Skill Isn't Technical. It's the One You Learned in English Class.](https://tlcmentor.substack.com/p/communication-skills-are-ai-skills) — The article that motivated this skill, exploring why clear writing is the highest-leverage AI skill.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
 ## License
 
 [MIT](LICENSE) © 2025 Keith MacKay
