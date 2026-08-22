@@ -35,6 +35,13 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 
 ## Installation
 
+### From the mackayi marketplace (recommended)
+
+```
+/plugin marketplace add keithmackay/mackayi
+/plugin install plsfix@mackayi
+```
+
 ### Claude Code
 
 ```bash
