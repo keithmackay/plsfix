@@ -6,8 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-09-20
+## [1.1.0] - 2026-09-27
 
+- Flag agent-config/harness files (CLAUDE.md, AGENTS.md, SKILL.md, etc.) for occasional-use sections that are split candidates, reported separately with a pointer to `tokentamer --fix`
 - Document mackayi marketplace installation in README
 - Add --version flag support, reporting installed version and a best-effort GitHub update check
 - Add Changelog section to README linking CHANGELOG.md
