@@ -64,6 +64,8 @@ digraph plsfix {
 
 Read the full document. For each section or paragraph, check against all 12 principles in order: Structure (P1-P4), then Content (P5-P8), then Delivery (P9-P12). Note every violation with its location and the principle it violates.
 
+**If the target is an agent-config/harness file** (CLAUDE.md, AGENTS.md, GEMINI.md, MEMORY.md, or a SKILL.md — recognizable by filename or by living in a `.claude/`, `.codex/`, or `skills/` path), also check P4 for a split-candidate variant: a section that's long, only needed occasionally (troubleshooting runbooks, exhaustive tables, one-off history, dense examples), and not required on every load. This is a structural issue like any other P4 violation, but the fix isn't rewording — it's relocating the section to a separate reference file with a pointer left behind. Do not perform the actual split (that's multi-file surgery outside this skill's single-document contract); flag it in the change report per Step 3 and point the user at `tokentamer --fix`, which performs the split.
+
 ### Step 2: Rewrite
 
 Apply fixes to produce a clean, improved version of the document. Preserve the author's intent, voice, and structure where possible. Make the minimum changes needed to satisfy each principle.
@@ -98,6 +100,7 @@ Produce a markdown table summarizing every change:
 - "Rationale" explains why this change improves the document in one sentence
 - If no violations are found for a principle, do not include a "no changes" row; omit silently
 - End the report with a **Principles Not Triggered** line listing any of P1-P12 that required no changes (confirms you checked)
+- If any P4 split-candidates were flagged (harness/skill files only, see Step 1), add a **Split Candidates** section below the table listing each one (section name, rough size, why it's occasional-use) instead of a Before/After row — these aren't applied by this skill; note that `tokentamer --fix` can perform the split
 
 ### Step 4: Present
 
