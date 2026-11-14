@@ -42,13 +42,13 @@ Added to `SKILL.md`'s `## Flags` section, as a new subsection after `--version`,
   ```
   ## STE Compliance
 
-  | # | Location | STE Rule | Before | After | Rationale |
-  |---|----------|----------|--------|-------|-----------|
+  | # | Location | STE Rule | Before (summary) | After (summary) | Rationale |
+  |---|----------|----------|-------------------|------------------|-----------|
   | 1 | Section 2, para 3 | R1: One word, one meaning | Document used "commence," "initiate," and "begin" interchangeably for the same action | Standardized on "start" throughout | Mixed terms for one action force the reader to confirm they're the same step |
   | 2 | Section 4 | R5: Procedure steps as direct commands | "The configuration file should be edited by the user" | "Edit the configuration file" | Passive description read as optional; the imperative reads as a required step |
   ```
 
-  This matches the six-column schema of the existing `plsfix Change Report` table (`# | Location | Principle | Before | After | Rationale`) exactly, substituting `STE Rule` for `Principle` — kept consistent rather than dropped, so the two tables read the same way.
+  This matches the six-column schema of the existing `plsfix Change Report` table (`# | Location | Principle | Before (summary) | After (summary) | Rationale`) exactly, substituting `STE Rule` for `Principle` — kept consistent rather than dropped, so the two tables read the same way.
 
   If no STE violations were found, omit the **STE Compliance** section entirely (same silence rule as the existing "no violations, no row" convention for principles). This section only appears when `--ste` was active for the run.
 
@@ -93,6 +93,8 @@ This repo keeps byte-identical mirror copies of `SKILL.md`, `help.md`, and `refe
 | `references/ste100.md` + `skills/plsfix/references/ste100.md` | New file (Design §2) — written in STE itself from the start, so it doesn't need a separate rewrite pass |
 
 The flag-list additions (to `SKILL.md` and `help.md`) and the STE-voice rewrite (to the prose of those same two files, plus `references/principles.md`) are two distinct edits to the same files — the flag content is new material describing a new capability; the voice rewrite is a style pass over existing content. Apply both in either order, but both are required before this ships.
+
+**`SKILL.md`'s YAML frontmatter `description:` field is excluded from the STE rewrite.** That string is byte-identical across three files today — `SKILL.md`'s frontmatter, `.codex-plugin/plugin.json`'s `"description"`, and `gemini-extension.json`'s `"description"` — because it's skill-discovery metadata (what a platform shows when deciding whether to invoke plsfix), not instructional prose the agent reads step-by-step. Leave it untouched in all three files; this avoids a three-way sync burden for a one-line string that gets no functional benefit from STE's procedural-writing rules. Neither manifest file is added to the files-touched table above as a result — the only reason either appears anywhere in this spec is the version-bump requirement in Design §5, which is unrelated to this rewrite.
 
 ### 4. Rewrite plsfix's own instructional files in STE
 
