@@ -28,7 +28,10 @@ Added to `SKILL.md`'s `## Flags` section, as a new subsection after `--version`,
 
 **How it differs from `--help`/`--version`:** those two are terminal flags — per `SKILL.md` lines 28-45, each one short-circuits the entire workflow and never reaches Steps 1-4. `--ste` is the opposite: it is additive and non-terminal. It does not replace or skip any step; it adds STE checks inside the existing Steps 1-3 alongside the normal 12-principle pass, and Step 4 (Present) runs unchanged. The new `## Flags` subsection for `--ste` must state this distinction explicitly so an implementer doesn't model it as another early-exit branch.
 
-**Invocation syntax:** `--ste` is accepted in either position relative to the document argument — both `/plsfix --ste <path-to-document>` and `/plsfix <path-to-document> --ste` are valid and equivalent. Document both literal forms in `SKILL.md`'s `## Flags` entry and in `help.md`'s `USAGE` block (e.g. add a line `/plsfix <path-to-document> --ste   Improve the document, enforcing ASD-STE100 language rules`).
+**Invocation syntax:** `--ste` is accepted in either position relative to the document argument — both `/plsfix --ste <path-to-document>` and `/plsfix <path-to-document> --ste` are valid and equivalent. Document both literal forms in `SKILL.md`'s `## Flags` entry and in `help.md`'s `USAGE` and `FLAGS` blocks:
+
+- `USAGE` line: `/plsfix <path-to-document> --ste   Improve the document, enforcing ASD-STE100 language rules`
+- `FLAGS` line, in the same style as the existing `--help    Show this help message without making any changes`: `--ste     Also enforce ASD-STE100 (Simplified Technical English) language rules`
 
 **Effect on the workflow when `--ste` is present:**
 
@@ -39,11 +42,13 @@ Added to `SKILL.md`'s `## Flags` section, as a new subsection after `--version`,
   ```
   ## STE Compliance
 
-  | # | Location | STE Rule | Before | After |
-  |---|----------|----------|--------|-------|
-  | 1 | Section 2, para 3 | R1: One word, one meaning | Document used "commence," "initiate," and "begin" interchangeably for the same action | Standardized on "start" throughout |
-  | 2 | Section 4 | R5: Procedure steps as direct commands | "The configuration file should be edited by the user" | "Edit the configuration file" |
+  | # | Location | STE Rule | Before | After | Rationale |
+  |---|----------|----------|--------|-------|-----------|
+  | 1 | Section 2, para 3 | R1: One word, one meaning | Document used "commence," "initiate," and "begin" interchangeably for the same action | Standardized on "start" throughout | Mixed terms for one action force the reader to confirm they're the same step |
+  | 2 | Section 4 | R5: Procedure steps as direct commands | "The configuration file should be edited by the user" | "Edit the configuration file" | Passive description read as optional; the imperative reads as a required step |
   ```
+
+  This matches the six-column schema of the existing `plsfix Change Report` table (`# | Location | Principle | Before | After | Rationale`) exactly, substituting `STE Rule` for `Principle` — kept consistent rather than dropped, so the two tables read the same way.
 
   If no STE violations were found, omit the **STE Compliance** section entirely (same silence rule as the existing "no violations, no row" convention for principles). This section only appears when `--ste` was active for the run.
 
@@ -78,6 +83,8 @@ This file is loaded only when `--ste` is active, mirroring how `references/princ
 
 This repo keeps byte-identical mirror copies of `SKILL.md`, `help.md`, and `references/principles.md` under `skills/plsfix/` for Codex/Gemini/Antigravity (confirmed identical today; `GEMINI.md` directly `@`-includes `skills/plsfix/SKILL.md` and `skills/plsfix/references/principles.md`, and README.md states all four platforms share the same `SKILL.md` format). Every change below must be applied to both the top-level file and its `skills/plsfix/` mirror, kept byte-identical, including the brand-new `references/ste100.md` (which also needs a copy at `skills/plsfix/references/ste100.md`):
 
+**`GEMINI.md`'s static includes stay unchanged.** `GEMINI.md` currently only `@`-includes `skills/plsfix/SKILL.md` and `skills/plsfix/references/principles.md` — it does not include `skills/plsfix/help.md`, even though `help.md` exists and is read on demand (via the `--help` flag), not preloaded. `references/ste100.md` follows that same `help.md` precedent: it's read on demand only when `--ste` is active, so `GEMINI.md` does **not** get a new `@`-include line for it. The file still needs its `skills/plsfix/` mirror copy (for Codex/Gemini/Antigravity's on-demand reads to find it), it just isn't added to `GEMINI.md`'s always-loaded set.
+
 | File | Change |
 |------|--------|
 | `SKILL.md` + `skills/plsfix/SKILL.md` | Add the `--ste` flag subsection (Design §1); rewrite the rest of the file's prose into STE (Design §4) |
@@ -97,7 +104,7 @@ No other files change voice. `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md
 
 This is a new, user-invokable flag/capability — not a refinement of existing default behavior — so it warrants a **minor** version bump, consistent with the 1.1.0 release ("Add --version flag support"). This is distinct from the 1.1.1 patch release, which only extended what the existing default diagnosis step already checked for (no new flag, no new opt-in capability); that precedent doesn't apply here.
 
-On release, bump the version in every manifest that carries one, matching current project convention (confirmed in `.codex-plugin/plugin.json`, `gemini-extension.json`, and git history showing commit `3fbdce0` established the practice of keeping these aligned with the release tag):
+On release, bump the version in every manifest that carries one, matching current project convention (confirmed in `.codex-plugin/plugin.json`, `gemini-extension.json`, and git history: commits `3877c7c` "Bump version to v1.1.0" and `c98f330` "Bump version to v1.1.1" both touch these two manifest files, establishing that each release bump updates them in lockstep with the release tag):
 
 - `.codex-plugin/plugin.json` — `"version"` field
 - `gemini-extension.json` — `"version"` field
