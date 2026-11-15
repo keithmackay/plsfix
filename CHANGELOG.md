@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+- Add `--ste` flag: layers ASD-STE100 (Simplified Technical English) language rules on top of the 12-principle rewrite for target documents, with a new `references/ste100.md` rule reference
+- Rewrite `SKILL.md`, `references/principles.md`, and `help.md` into ASD-STE100 style, so plsfix's own instructions model the standard it can now apply
+
 ## [1.1.1] - 2026-09-27
 
 - Flag agent-config/harness files (CLAUDE.md, AGENTS.md, SKILL.md, etc.) for occasional-use sections that are split candidates, reported separately with a pointer to `tokentamer --fix`
