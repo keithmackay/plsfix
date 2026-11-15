@@ -130,7 +130,7 @@ Make a markdown table. List every change in it:
 - Always cite the principle by number and name.
 - Write "Before" and "After" as short summaries or direct quotes. Do not write full paragraphs.
 - In "Rationale," explain in one sentence why the change improves the document.
-- If a principle has no violations, do not add a "no changes" row. Leave it out without comment.
+- If a principle has no violations, do not add a "no changes" row for it. Leave it out without comment.
 - End the report with a **Principles Not Triggered** line. This line lists each of P1-P12 that needed no changes. It confirms that you checked every principle.
 - If Step 1 flagged any P4 split candidates (harness and skill files only — see Step 1), add a **Split Candidates** section below the table. For each split candidate, list its section name, its rough size, and why it is only needed sometimes. Do not give it a Before/After row; this skill does not perform the split itself. Instead, tell the user to run `tokentamer --fix`, which performs the split.
 - If `--ste` was active (see the `--ste` flag section) and the document had STE violations, add an **STE Compliance** section after **Principles Not Triggered**, and after **Split Candidates** if one is present.
