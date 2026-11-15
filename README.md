@@ -32,6 +32,7 @@ Works as a skill in [Claude Code](https://docs.anthropic.com/en/docs/agents-and-
 - **Voice preservation** — rewrites sharpen clarity without stripping the author's tone or inventing new requirements
 - **Safe assumptions** — anything the skill infers is marked `[CONFIRM]` so the author can verify or override
 - **Cross-platform** — same `SKILL.md` file works in Claude Code, OpenAI Codex, Google Antigravity, and Gemini CLI
+- **Optional ASD-STE100 mode** — pass `--ste` to also enforce Simplified Technical English rules (one word per meaning, active voice, short sentences, direct commands) on top of the 12 principles
 
 ## Installation
 
@@ -142,6 +143,12 @@ in a 3-column grid.
 | 2 | P6: Name your audience | "good for executives" | "VP-level executives who review operational health weekly" | Specifying the audience calibrates vocabulary and depth |
 | 3 | P9: Say what to do | "Don't use too many colors" / "Avoid technical jargon" | "dark theme" / "Use plain language a non-technical stakeholder would understand" | Negative instructions replaced with positive directives |
 | 4 | P7: Define output contract | (missing) | "single-page view, one chart per metric, 3-column grid" | No format specification existed; output shape was undefined |
+
+### Flags
+
+- `/plsfix --help` — print usage and exit without changing anything
+- `/plsfix --version` — print the installed version and check for updates
+- `/plsfix <document> --ste` — also enforce [ASD-STE100](https://en.wikipedia.org/wiki/Simplified_Technical_English) (Simplified Technical English) rules while rewriting. `--ste` works before or after the document path. Unlike `--help`/`--version`, it doesn't short-circuit the workflow — it layers extra checks (one word per meaning, active voice, short sentences, direct commands for procedure steps) onto the normal diagnose → rewrite → report flow, and adds an **STE Compliance** table to the change report when violations are found.
 
 ## What to Use It On
 
